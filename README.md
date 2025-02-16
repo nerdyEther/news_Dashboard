@@ -67,6 +67,8 @@ npm run dev
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
+**Note:** The repository is hosted live, but the News API's free version only allows resource sharing on localhost. You can use your own News API key locally to see the complete functionality.
+
 ## Demo Credentials
 
 - **Email**: demo@example.com
