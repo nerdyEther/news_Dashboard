@@ -60,20 +60,15 @@ export default function NewsSection() {
       const newErrors: ApiError[] = [];
 
       try {
-        // Fetch news articles from Currents API
+       
         let newsArticles: NewsArticle[] = [];
         try {
           const newsResponse = await axios.get(
-            `https://api.currentsapi.services/v1/search?keywords=technology&language=en&apiKey=${process.env.NEXT_PUBLIC_CURRENTS_API_KEY}`,
+            `https://newsapi.org/v2/everything?q=tech&apiKey=${process.env.NEXT_PUBLIC_NEWS_API_KEY}`,
             { timeout: 8000 }
           );
-          newsArticles = newsResponse.data.news.map((article: any) => ({
-            title: article.title,
-            author: article.author || 'Unknown',
-            publishedAt: article.publishedAt,
-            description: article.description || '',
-            url: article.url,
-            source: { name: article.source || 'Currents API' },
+          newsArticles = newsResponse.data.articles.map((article: any) => ({
+            ...article,
             type: 'news'
           }));
         } catch (error) {
@@ -82,15 +77,15 @@ export default function NewsSection() {
             if (error.code === 'ECONNABORTED') {
               message = 'News API request timed out';
             } else if (error.response?.status === 429) {
-              message = 'API rate limit exceeded';
+              message = 'News API rate limit exceeded';
             } else if (error.response?.status === 401) {
-              message = 'Invalid API key';
+              message = 'Invalid News API key';
             }
           }
           newErrors.push({ source: 'news', message });
         }
 
-        // Fetch blog articles from Dev.to
+      
         let blogArticles: NewsArticle[] = [];
         try {
           const devToResponse = await axios.get(
@@ -113,7 +108,7 @@ export default function NewsSection() {
           });
         }
 
-        // Combine articles
+       
         setArticles([...newsArticles, ...blogArticles]);
         setErrors(newErrors);
       } catch (error) {
@@ -126,7 +121,7 @@ export default function NewsSection() {
     fetchContent();
   }, [retryCount]);
 
-  // Reset page when filters change
+ 
   useEffect(() => {
     setCurrentPage(1);
   }, [filters]);
@@ -206,6 +201,7 @@ export default function NewsSection() {
 
   return (
     <div className="space-y-6">
+      
       {errors.length > 0 && (
         <div className="px-4 sm:px-6 space-y-2">
           {errors.map((error, index) => (
@@ -261,10 +257,12 @@ export default function NewsSection() {
         </div>
       </div>
 
+  
       <div className="px-4 sm:px-6">
         <AuthorDistributionChart articles={filteredArticles} />
       </div>
 
+  
       <div className="px-4 sm:px-6">
         <ScrollArea className="h-[500px] sm:h-[600px]">
           <div className="space-y-4 pr-4">
